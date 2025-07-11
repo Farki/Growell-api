@@ -1,0 +1,141 @@
+openapi: 3.0.0
+info:
+  title: Growell API
+  version: 1.0.0
+paths:
+  /:
+    get:
+      summary: Home endpoint
+      description: Returns service metadata and links to health and docs endpoints.
+      tags:
+        - Home
+      responses:
+        200:
+          description: Service metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                  environment:
+                    type: string
+                  health:
+                    type: string
+                  docs:
+                    type: string
+  /health:
+    get:
+      summary: Health check
+      description: Returns service health status for k8s readiness probes
+      tags:
+        - General
+      responses:
+        200:
+          description: Returns service health status for k8s readiness probes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  services:
+                    type: object
+                    properties:
+                      database:
+                        type: string
+                      redis:
+                        type: string
+  /metrics:
+    get:
+      summary: Prometheus metrics
+      description: Exposes application metrics in Prometheus format for monitoring.
+      tags:
+        - General
+      responses:
+        200:
+          description: Prometheus metrics output
+          content:
+            text/plain:
+              schema:
+                type: string
+  /docs:
+    get:
+      summary: OpenAPI documentation
+      description: Serves the OpenAPI documentation in HTML format.
+      tags:
+        - General
+      responses:
+        200:
+          description: OpenAPI documentation
+          content:
+            text/html:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: object
+  /v1/get-active-contexts:
+    get:
+      summary: Get active contexts for a user
+      description: Returns all active contexts for the specified user
+      tags:
+        - User
+      parameters:
+        - in: query
+          name: userName
+          required: true
+          schema:
+            type: string
+          description: Username to fetch active contexts for
+      responses:
+        200:
+          description: List of active contexts for the user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  contexts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        userName:
+                          type: string
+                          description: Username of the user
+                        contextIsActive:
+                          type: boolean
+                          description: Whether the context is active
+                        contextId:
+                          type: string
+                          description: Unique identifier for the context
+                        clientName:
+                          type: string
+                          description: Name of the client
+                        features:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              featId:
+                                type: string
+                                description: Feature identifier
+                              permission:
+                                type: string
+                                description: Permission type (e.g., create, view, edit, delete)
+        404:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User not found"
+
+components:
+  schemas:
