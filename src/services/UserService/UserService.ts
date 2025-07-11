@@ -11,6 +11,15 @@ export default class UserService {
       throw new NotFoundError("User not found")
     }
 
-    return data.contexts.filter(context => context.userName === userName && context.contextIsActive);
+    return data.contexts
+      .filter(ctx => ctx.userName === userName && ctx.contextIsActive)
+      .map(({features, ...rest}) => ({
+        ...rest,
+        features: features.reduce<Record<string, string[]>>((acc, {featId, permission}) => {
+          if (!acc[featId]) acc[featId] = [];
+          if (!acc[featId].includes(permission)) acc[featId].push(permission);
+          return acc;
+        }, {})
+      }));
   }
 }
