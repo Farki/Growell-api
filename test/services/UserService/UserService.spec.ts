@@ -28,6 +28,18 @@ describe('UserService', () => {
       expect(result[1].userName).toBe(userName);
       expect(result[0].contextIsActive).toBe(true);
       expect(result[1].contextIsActive).toBe(true);
+
+      // Verify features transformation for first context
+      expect(result[0].features).toEqual({
+        'feat1': ['create', 'view'],
+        'feat2': ['view']
+      });
+
+      // Verify features transformation for second context
+      expect(result[1].features).toEqual({
+        'feat1': ['create', 'view'],
+        'feat2': ['view', 'create', 'delete']
+      });
     });
 
     it('should throw NotFoundError when user does not exist', () => {
@@ -50,6 +62,12 @@ describe('UserService', () => {
       expect(result[0].userName).toBe(userName);
       expect(result[0].contextIsActive).toBe(true);
       expect(result[0].contextId).toBe('ctx3');
+
+      // Verify features transformation
+      expect(result[0].features).toEqual({
+        'feat1': ['view'],
+        'feat2': ['view', 'edit']
+      });
     });
 
     it('should handle undefined username correctly', () => {
