@@ -13,7 +13,7 @@ A RESTful API service built with Express and TypeScript for managing user contex
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone git@github.com:Farki/Growell-api.git
    cd growell-api
    ```
 
